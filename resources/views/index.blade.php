@@ -4,6 +4,7 @@
         <title>Project</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
 
         <style>
             html, body {
@@ -42,5 +43,12 @@
             </div>
              <div ui-view></div>
         </div>
+            <!-- Application Dependencies -->
+        <script src='js/global.min.js'></script>
+
+        <!-- Application Scripts -->
+        <script src="js/app.js"></script>
+        <script src="js/authController.js"></script>
+        <script src="js/userController.js"></script>
     </body>
 </html>
