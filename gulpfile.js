@@ -119,8 +119,37 @@ gulp.task('notify', function(a) {
 });
 
 /*------------------------------------*\
+ Uglify
+\*------------------------------------*/
+
+gulp.task('compress', function() {
+    return gulp.src([
+        'node_modules/angular/angular.js',
+        'node_modules/angular-ui-router/release/angular-ui-router.js',
+        'node_modules/satellizer/dist/satellizer.js',
+    ])
+        .pipe(plumber())
+        .pipe(concat('global.min.js'))
+        //.pipe(uglify())
+        .pipe(debug({title: 'compress-js:'}))
+        .pipe(gulp.dest('public/js/'));
+});
+
+// gulp.task('compile-coffee', function() {
+//     gulp.src('resources/assets/js/**/*.coffee')
+//         .pipe(sourcemaps.init())
+//         .pipe(coffee({bare: true}).on('error', gutil.log))
+//         .pipe(sourcemaps.write())
+//         .pipe(plumber())
+//         .pipe(concat('app.js'))
+//         .pipe(debug({title: 'compile-coffee:'}))
+//         .pipe(gulp.dest('public/build/js'));
+// });
+
+
+/*------------------------------------*\
  Run default gulp tasks
- \*------------------------------------*/
+\*------------------------------------*/
 
 gulp.task('default', [
   'sass',

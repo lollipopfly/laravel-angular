@@ -38,9 +38,7 @@
   </header>
   <div class="container">
     <div class="content">
-
       <div ui-view></div>
-
     </div>
   </div>
 
