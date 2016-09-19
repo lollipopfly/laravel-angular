@@ -1,0 +1,34 @@
+.col-sm-4.col-sm-offset-4.page-header
+  .well
+    h3 Register
+    form name="signUpForm" ng-submit="register.register(signUpForm)"
+      .form-group
+        input.form-control ng-model="register.user.name" placeholder="Name" type="text" ng-required="true"
+      .form-group
+        input.form-control [
+          type="email"
+          name="email"
+          ng-model="register.user.email"
+          ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+          placeholder="Email"
+          ng-required="true"
+        ]
+
+      .form-group
+        input.form-control [
+          type="password"
+          name="password"
+          ng-model="register.user.password"
+          placeholder="Password"
+          ng-required="true"
+        ]
+      .form-group
+        a href="auth" Auth
+      .form-group
+        .alert.alert-danger ng-if="error.email"
+          | {{error.email[0]}}
+      .form-group
+        .alert.alert-danger ng-if="error.password"
+          | {{error.password[0]}}
+      .form-group
+        button.btn.btn-primary type="submit"  Submit

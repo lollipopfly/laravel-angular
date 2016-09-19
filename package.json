@@ -14,14 +14,21 @@
     "gulp-plumber": "^1.1.0",
     "gulp-postcss": "^6.1.1",
     "gulp-sass": "^2.3.2",
+    "gulp-slim": "^0.3.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
     "laravel-elixir": "^5.0.0",
+    "postcss-color-function": "^2.0.1",
+    "postcss-custom-selectors": "^3.0.0",
+    "postcss-pxtorem": "^3.3.1",
+    "postcss-sass-extend": "0.0.1",
     "postcss-size": "^1.0.0"
   },
   "dependencies": {
     "angular": "^1.5.8",
     "angular-ui-router": "^0.3.1",
+    "gulp-util": "^3.0.7",
     "satellizer": "^0.15.5"
   }
 }

@@ -1,0 +1,15 @@
+.col-sm-4.col-sm-offset-4.page-header
+  .well
+    h3 Login
+    form name="signInForm" ng-submit="auth.login()"
+      .form-group
+        input.form-control ng-model="auth.email" placeholder="Email" type="email" ng-required="true"
+      .form-group
+        input.form-control ng-model="auth.password" placeholder="Password" type="password" ng-required="true"
+      .form-group
+        a href="/forgot_password" Forgot password?
+      .form-group
+        a href="register" Registration
+      .alert.alert-danger ng-if="loginErrorText"
+        | {{ loginErrorText }}
+      button.btn.btn-primary type="submit"  Submit
