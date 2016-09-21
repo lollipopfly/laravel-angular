@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('confirmed')->default(0);
             $table->string('confirmation_code')->nullable();
-            $table->string('restore_password_code')->nullable();
+            $table->string('reset_password_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -31,4 +31,6 @@ UserController = ($http, $state, $auth, $rootScope) ->
   return
 
 'use strict'
-angular.module('app').controller 'UserController', UserController
+angular
+  .module('app')
+  .controller('UserController', UserController)

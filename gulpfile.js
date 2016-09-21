@@ -135,18 +135,6 @@ gulp.task('compress', function() {
         .pipe(gulp.dest('public/js/'));
 });
 
-// gulp.task('compile-coffee', function() {
-//     gulp.src('resources/assets/js/**/*.coffee')
-//         .pipe(sourcemaps.init())
-//         .pipe(coffee({bare: true}).on('error', gutil.log))
-//         .pipe(sourcemaps.write())
-//         .pipe(plumber())
-//         .pipe(concat('app.js'))
-//         .pipe(debug({title: 'compile-coffee:'}))
-//         .pipe(gulp.dest('public/build/js'));
-// });
-
-
 /*------------------------------------*\
  Run default gulp tasks
 \*------------------------------------*/

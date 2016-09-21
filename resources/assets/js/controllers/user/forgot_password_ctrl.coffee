@@ -1,19 +1,20 @@
-ForgotPasswordController = ($scope, $auth, $state, $http, $rootScope, $stateParams) ->
+ForgotPasswordController = ($scope, $http) ->
   vm = this
 
-  $scope.restorePassword = (form) ->
-    $scope.data = {
-      email: $scope.email
+  vm.restorePassword = ()->
+    data = {
+      email: vm.email
     }
 
-    $http.post('api/authenticate/send_restore_code', $scope.data).success((data, status, headers, config) ->
-      console.log(data);
+    $http.post('api/authenticate/send_reset_code', data).success((data, status, headers, config) ->
       if(data)
-        $scope.successSendingEmail = true
+        vm.successSendingEmail = true
     ).error (data, status, header, config) ->
-      console.log(data);
-      $scope.emailErrorText = data.error
+      vm.emailErrorText = data.error
     return
+  return
 
 'use strict'
-angular.module('app').controller 'ForgotPasswordController', ForgotPasswordController
+angular
+  .module('app')
+  .controller('ForgotPasswordController', ForgotPasswordController)

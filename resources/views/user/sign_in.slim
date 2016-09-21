@@ -7,9 +7,9 @@
       .form-group
         input.form-control ng-model="auth.password" placeholder="Password" type="password" ng-required="true"
       .form-group
-        a href="/forgot_password" Forgot password?
+        a href="/user/forgot_password" Forgot your password?
       .form-group
-        a href="register" Registration
-      .alert.alert-danger ng-if="loginErrorText"
-        | {{ loginErrorText }}
+        a href="user/sign_up" Create your account
+      .alert.alert-danger ng-if="auth.loginErrorText"
+        | {{ auth.loginErrorText }}
       button.btn.btn-primary type="submit"  Submit

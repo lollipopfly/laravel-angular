@@ -1,6 +1,6 @@
 .col-sm-4.col-sm-offset-4.page-header
   .well
-    h3 Register
+    h3 Registration
     form name="signUpForm" ng-submit="register.register(signUpForm)"
       .form-group
         input.form-control ng-model="register.user.name" placeholder="Name" type="text" ng-required="true"
@@ -23,12 +23,12 @@
           ng-required="true"
         ]
       .form-group
-        a href="auth" Auth
+        a href="user/sign_in" Already have an account?
       .form-group
-        .alert.alert-danger ng-if="error.email"
-          | {{error.email[0]}}
+        .alert.alert-danger ng-if="register.error.email"
+          | {{register.error.email[0]}}
       .form-group
-        .alert.alert-danger ng-if="error.password"
-          | {{error.password[0]}}
+        .alert.alert-danger ng-if="register.error.password"
+          | {{register.error.password[0]}}
       .form-group
         button.btn.btn-primary type="submit"  Submit

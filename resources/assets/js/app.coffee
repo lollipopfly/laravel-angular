@@ -1,9 +1,17 @@
 'use strict'
+
 angular
   .module('app', [
     'ui.router'
     'satellizer'
   ]).config(($stateProvider, $urlRouterProvider, $authProvider, $locationProvider) ->
+    $locationProvider.html5Mode true
+    # Satellizer configuration that specifies which API
+    # route the JWT should be retrieved from
+    $authProvider.loginUrl = '/api/authenticate'
+    $authProvider.signupUrl = '/api/authenticate/register'
+    $urlRouterProvider.otherwise '/sign_in'
+
     # protect link
     _redirectIfNotAuthenticated = ($q, $state, $auth) ->
       defer = $q.defer()
@@ -11,19 +19,10 @@ angular
         defer.resolve()
       else
         $timeout ->
-          $state.go 'auth'
+          $state.go 'sign_in'
           return
         defer.reject()
       defer.promise
-
-    $locationProvider.html5Mode true
-
-    # Satellizer configuration that specifies which API
-    # route the JWT should be retrieved from
-    $authProvider.loginUrl = '/api/authenticate'
-    $authProvider.signupUrl = '/api/authenticate/register'
-
-    $urlRouterProvider.otherwise '/auth'
 
     $stateProvider
       .state('/',
@@ -33,38 +32,39 @@ angular
           redirectIfNotAuthenticated: _redirectIfNotAuthenticated
         })
 
-      .state('auth',
-        url: '/auth'
+      # USER
+      .state('sign_in',
+        url: '/user/sign_in'
         templateUrl: '../views/user/sign_in.html'
-        controller: 'AuthController as auth')
-
-      .state('register',
-        url: '/register'
+        controller: 'SignInController as auth'
+      )
+      .state('sign_up',
+        url: '/user/sign_up'
         templateUrl: '../views/user/sign_up.html'
-        controller: 'RegisterController as register')
-
-      .state('sign-up-success',
-        url: '/sign_up_sucess'
+        controller: 'SignUpController as register'
+      )
+      .state('sign_up_success',
+        url: '/user/sign_up_success'
         templateUrl: '../views/user/sign_up_success.html'
       )
-      .state('confirm',
-        url: '/confirm/:confirmation_code'
-        controller: 'ConfirmController as confirm'
-      )
       .state('forgot_password',
-        url: '/forgot_password'
-        controller: 'ForgotPasswordController as forgotPassword'
+        url: '/user/forgot_password'
         templateUrl: '../views/user/forgot_password.html'
+        controller: 'ForgotPasswordController as forgotPassword'
       )
-      .state('restore_password',
-        url: '/restore_password/:restore_password_code'
-        controller: 'RestorePasswordController as restorePassword'
-        templateUrl: '../views/user/restore_password.html'
+      .state('reset_password',
+        url: '/user/reset_password/:reset_password_code'
+        templateUrl: '../views/user/reset_password.html'
+        controller: 'ResetPasswordController as resetPassword'
+      )
+      .state('confirm',
+        url: '/user/confirm/:confirmation_code'
+        controller: 'ConfirmController'
       )
       .state('users',
         url: '/users'
         templateUrl: '../views/user/users_view.html'
-        controller: 'UserController as user'
+        controller: 'UserController'
         resolve: {
           redirectIfNotAuthenticated: _redirectIfNotAuthenticated
         })
@@ -75,14 +75,10 @@ angular
 
     $rootScope.logout = ->
       $auth.logout().then ->
-        # Remove the authenticated user from local storage
         localStorage.removeItem 'user'
-        # Flip authenticated to false so that we no longer
-        # show UI elements dependant on the user being logged in
         $rootScope.authenticated = false
-        # Remove the current user info from rootscope
         $rootScope.currentUser = null
-        $state.go 'auth'
+        $state.go 'sign_in'
         return
       return
 
@@ -90,23 +86,21 @@ angular
     $timeout(() ->
       $rootScope.currentState = $state.current.name
 
-      if !$auth.isAuthenticated() && $rootScope.currentState != 'register' && $rootScope.currentState != 'confirm' && $rootScope.currentState != 'forgot_password' && $rootScope.currentState != 'restore_password'
-        # event.preventDefault()
-        $location.path 'auth'
+      ### TODO: Refactoring###
+      if !$auth.isAuthenticated() && $rootScope.currentState != 'register' && $rootScope.currentState != 'confirm' && $rootScope.currentState != 'forgot_password' && $rootScope.currentState != 'reset_password'
+        $location.path 'user/sign_in'
         return
     )
 
     $rootScope.$on '$stateChangeStart', (event, toState) ->
-      # Grab the user from local storage and parse it to an object
       user = JSON.parse(localStorage.getItem('user'))
 
       if user
         $rootScope.authenticated = true
-
         $rootScope.currentUser = user
         # If the user is logged in and we hit the auth route we don't need
         # to stay there and can send the user to the main state
-        if toState.name == 'auth'
+        if toState.name == 'sign_in'
           event.preventDefault()
           $state.go '/'
       return
