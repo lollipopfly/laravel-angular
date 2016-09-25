@@ -20,14 +20,14 @@ Route::get('/', function () {
 // api
 Route::group(['prefix' => 'api'], function()
 {
-    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
-    Route::post('authenticate', 'AuthenticateController@authenticate');
+    Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
+    Route::post('authenticate', 'AuthController@authenticate');
 
-    Route::get('authenticate/get_user', 'AuthenticateController@getAuthenticatedUser');
-    Route::post('authenticate/register', 'AuthenticateController@register');
-    Route::post('authenticate/confirm', 'AuthenticateController@confirm');
-    Route::post('authenticate/send_reset_code', 'AuthenticateController@sendResetCode');
-    Route::post('authenticate/reset_password', 'AuthenticateController@resetPassword');
+    Route::get('authenticate/get_user', 'AuthController@getAuthenticatedUser');
+    Route::post('authenticate/register', 'AuthController@register');
+    Route::post('authenticate/confirm', 'AuthController@confirm');
+    Route::post('authenticate/send_reset_code', 'AuthController@sendResetCode');
+    Route::post('authenticate/reset_password', 'AuthController@resetPassword');
     // Route::resource('users', 'UsersController');
 });
 

@@ -12,7 +12,7 @@ use Auth;
 use Mail;
 use Hash;
 
-class AuthenticateController extends Controller
+class AuthController extends Controller
 {
     public function __construct(User $user, JWTAuth $jwtauth)
     {
