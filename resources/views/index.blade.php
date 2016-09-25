@@ -26,11 +26,12 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="users">Users</a></li>
-            <li><a href="auth">Auth</a></li>
-            <li><a href="register">Registration</a></li>
+            <li><a href="user/sign_in">Auth</a></li>
+            <li><a href="user/sign_up">Registration</a></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li ng-if="authenticated"><a href="#" ng-click="logout()">Logout</a></li>
+          <ul ng-if="authenticated" class="nav navbar-nav navbar-right">
+            <li>@{{ currentUser.name }}</li>
+            <li><a href="#" ng-click="logout()">Logout</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

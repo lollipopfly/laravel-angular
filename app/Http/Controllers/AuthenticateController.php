@@ -45,7 +45,6 @@ class AuthenticateController extends Controller
             return response()->json(['error' => 'Invalid login or password'], 401);
         }
       } catch (JWTException $e) {
-        // something went wrong whilst attempting to encode the token
         return response()->json(['error' => 'could_not_create_token'], 500);
       }
 
@@ -82,29 +81,11 @@ class AuthenticateController extends Controller
         return response()->json(['error' => 'User not added!'], 500);
     }
 
-    public function confirm(Request $request)
-    {
-      if (!$request->confirmation_code) {
-        return response()->json(['error' => 'Url do not has confirmation code!'], 500);
-      }
-
-      $user = User::where('confirmation_code', $request->confirmation_code)->first();
-      if (!$user) {
-        return response()->json(['error' => 'Do not find User'], 500);
-      }
-
-      $user->confirmed = 1;
-      $user->confirmation_code = null;
-      $user->save();
-
-      // Get JWT token
-      if (!$token=JWTAuth::fromUser($user)) {
-          return response()->json(['error' => 'invalid_credentials'], 401);
-      }
-
-      return $token;
-    }
-
+    /**
+     * Get user when user is login
+     *
+     * @return json
+     */
     public function getAuthenticatedUser()
     {
       try {
@@ -121,9 +102,37 @@ class AuthenticateController extends Controller
       } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
         return response()->json(['token_absent'], $e->getStatusCode());
       }
+      // Attention: If need changes, also need change in confirm menthod
+      $user = collect($user)->except(['confirmed', 'confirmation_code', 'reset_password_code']);
 
       // the token is valid and we have found the user via the sub claim
       return response()->json(compact('user'));
+    }
+
+    public function confirm(Request $request)
+    {
+      if (!$request->confirmation_code) {
+        return response()->json(['error' => 'Url do not has confirmation code!'], 500);
+      }
+
+      $user = User::where('confirmation_code', $request->confirmation_code)->first();
+
+      if (!$user) {
+        return response()->json(['error' => 'Do not find User'], 500);
+      }
+
+      $user->confirmed = 1;
+      $user->confirmation_code = null;
+      $user->save();
+
+      // Get JWT token
+      if (!$token=JWTAuth::fromUser($user)) {
+          return response()->json(['error' => 'invalid_credentials'], 401);
+      }
+      $user = collect($user)->except(['confirmed', 'confirmation_code', 'reset_password_code']);
+      $user['token'] = $token;
+
+      return $user;
     }
 
     public function sendResetCode(Request $request)

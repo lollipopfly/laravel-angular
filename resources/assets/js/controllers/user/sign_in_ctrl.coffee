@@ -9,7 +9,7 @@ SignInController = ($auth, $state, $http, $rootScope) ->
     $auth.login(credentials).then (->
       # Return an $http request for the now authenticated
       # user so that we can flatten the promise chain
-      $http.get('api/authenticate/user').then (response) ->
+      $http.get('api/authenticate/get_user').then (response) ->
         user = JSON.stringify(response.data.user)
         localStorage.setItem 'user', user
         $rootScope.authenticated = true

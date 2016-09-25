@@ -1,7 +1,5 @@
 UserController = ($http, $state, $auth, $rootScope) ->
   vm = this
-  vm.users
-  vm.error
 
   vm.getUsers = ->
     # This request will hit the index method in the AuthenticateController
@@ -10,7 +8,6 @@ UserController = ($http, $state, $auth, $rootScope) ->
       vm.users = users
       return
     ).error (error) ->
-      console.log error
       vm.error = error
       return
     return
@@ -24,7 +21,7 @@ UserController = ($http, $state, $auth, $rootScope) ->
       $rootScope.authenticated = false
       # Remove the current user info from rootscope
       $rootScope.currentUser = null
-      $state.go 'auth'
+      $state.go 'sign_in'
       return
     return
 

@@ -10,27 +10,13 @@ angular
     # route the JWT should be retrieved from
     $authProvider.loginUrl = '/api/authenticate'
     $authProvider.signupUrl = '/api/authenticate/register'
-    $urlRouterProvider.otherwise '/sign_in'
-
-    # protect link
-    _redirectIfNotAuthenticated = ($q, $state, $auth) ->
-      defer = $q.defer()
-      if $auth.isAuthenticated()
-        defer.resolve()
-      else
-        $timeout ->
-          $state.go 'sign_in'
-          return
-        defer.reject()
-      defer.promise
+    $urlRouterProvider.otherwise '/user/sign_in'
 
     $stateProvider
       .state('/',
         url: '/'
         templateUrl: '../views/home.html'
-        resolve: {
-          redirectIfNotAuthenticated: _redirectIfNotAuthenticated
-        })
+      )
 
       # USER
       .state('sign_in',
@@ -61,47 +47,45 @@ angular
         url: '/user/confirm/:confirmation_code'
         controller: 'ConfirmController'
       )
+
+      # Users
       .state('users',
         url: '/users'
         templateUrl: '../views/user/users_view.html'
-        controller: 'UserController'
-        resolve: {
-          redirectIfNotAuthenticated: _redirectIfNotAuthenticated
-        })
+        controller: 'UserController as user'
+      )
 
     # Get user on every load page
     return
-  ).run ($rootScope, $state, $auth, $location, $timeout) ->
-
-    $rootScope.logout = ->
-      $auth.logout().then ->
-        localStorage.removeItem 'user'
-        $rootScope.authenticated = false
-        $rootScope.currentUser = null
-        $state.go 'sign_in'
-        return
-      return
+  ).run ($q, $rootScope, $state, $auth, $location, $timeout) ->
+    publicRoutes = [
+      'sign_up'
+      'confirm'
+      'forgot_password'
+      'reset_password'
+    ]
 
     # if not logged
     $timeout(() ->
       $rootScope.currentState = $state.current.name
 
-      ### TODO: Refactoring###
-      if !$auth.isAuthenticated() && $rootScope.currentState != 'register' && $rootScope.currentState != 'confirm' && $rootScope.currentState != 'forgot_password' && $rootScope.currentState != 'reset_password'
+      if !$auth.isAuthenticated() && publicRoutes.indexOf($rootScope.currentState) == -1
         $location.path 'user/sign_in'
-        return
     )
 
     $rootScope.$on '$stateChangeStart', (event, toState) ->
       user = JSON.parse(localStorage.getItem('user'))
 
-      if user
+      if user && $auth.isAuthenticated()
         $rootScope.authenticated = true
         $rootScope.currentUser = user
-        # If the user is logged in and we hit the auth route we don't need
-        # to stay there and can send the user to the main state
-        if toState.name == 'sign_in'
-          event.preventDefault()
-          $state.go '/'
-      return
+
+      $rootScope.logout = ->
+        $auth.logout().then ->
+          localStorage.removeItem 'user'
+          $rootScope.authenticated = false
+          $rootScope.currentUser = null
+          $state.go 'sign_in'
+          return
+        return
     return

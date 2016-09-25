@@ -23,7 +23,7 @@ Route::group(['prefix' => 'api'], function()
     Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
     Route::post('authenticate', 'AuthenticateController@authenticate');
 
-    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
+    Route::get('authenticate/get_user', 'AuthenticateController@getAuthenticatedUser');
     Route::post('authenticate/register', 'AuthenticateController@register');
     Route::post('authenticate/confirm', 'AuthenticateController@confirm');
     Route::post('authenticate/send_reset_code', 'AuthenticateController@sendResetCode');
