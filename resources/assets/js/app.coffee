@@ -57,6 +57,7 @@ angular
 
     # Get user on every load page
     return
+
   ).run ($q, $rootScope, $state, $auth, $location, $timeout) ->
     publicRoutes = [
       'sign_up'
@@ -66,12 +67,10 @@ angular
     ]
 
     # if not logged
-    $timeout(() ->
-      $rootScope.currentState = $state.current.name
+    $rootScope.currentState = $state.current.name
 
-      if !$auth.isAuthenticated() && publicRoutes.indexOf($rootScope.currentState) == -1
-        $location.path 'user/sign_in'
-    )
+    if !$auth.isAuthenticated() && publicRoutes.indexOf($rootScope.currentState) == -1
+      $location.path 'user/sign_in'
 
     $rootScope.$on '$stateChangeStart', (event, toState) ->
       user = JSON.parse(localStorage.getItem('user'))
@@ -86,6 +85,9 @@ angular
           $rootScope.authenticated = false
           $rootScope.currentUser = null
           $state.go 'sign_in'
+
           return
+
         return
+
     return
