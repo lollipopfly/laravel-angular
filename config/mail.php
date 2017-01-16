@@ -55,7 +55,10 @@ return [
     |
     */
 
-    'from' => ['address' => 'timskiy2@yandex.ru', 'name' => 'Robot'],
+    'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'timskiy2@yandex.ru'),
+        'name' => env('MAIL_FROM_NAME', 'Robot'),
+    ],
 
     /*
     |--------------------------------------------------------------------------

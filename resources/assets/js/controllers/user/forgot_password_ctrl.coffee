@@ -6,12 +6,15 @@ ForgotPasswordController = ($scope, $http) ->
       email: vm.email
     }
 
-    $http.post('api/authenticate/send_reset_code', data).success((data, status, headers, config) ->
-      if(data)
-        vm.successSendingEmail = true
-    ).error (data, status, header, config) ->
-      vm.emailErrorText = data.error
+    $http.post('api/authenticate/send_reset_code', data)
+      .then (response) ->
+        if(response.data)
+          vm.successSendingEmail = true
+      , (error) ->
+        vm.emailErrorText = error.data.error
+
     return
+
   return
 
 'use strict'

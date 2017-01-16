@@ -16,11 +16,15 @@ ResetPasswordController = ($auth, $state, $http, $stateParams) ->
       vm.passwordError = 'Password is invalid! Minimum length is 8 characters'
       return false
 
-    $http.post('api/authenticate/reset_password', data).success((data, status, headers, config) ->
-      if(data)
-        vm.successRestorePassword = true
-    ).error (data, status, header, config) ->
+    $http.post('api/authenticate/reset_password', data)
+      .then (response) ->
+        if(response.data)
+           vm.successRestorePassword = true
+      , (error) ->
+        console.log(error);
+
     return
+
   return
 
 'use strict'

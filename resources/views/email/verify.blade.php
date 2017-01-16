@@ -9,15 +9,15 @@
       <p>Thanks for creating an account.</p>
       <p>Please follow the link below to verify your email address</p>
       <p>
-        {{ URL::to('user/confirm/' . $confirmation_code) }}.<br/>
+        {{ URL::to('user/confirm/' . $emailUser['confirmation_code']) }}.<br/>
       </p>
 
       <p>
         Your login details
         <br>
-        E-mail: <a href="/compose?To={{ $email }}" rel="noopener">{{ $email }}</a>
+        E-mail: <a href="/compose?To={{ $emailUser['email'] }}" rel="noopener">{{ $emailUser['email'] }}</a>
         <br>
-        Password: {{ $password }}
+        Password: {{ $emailUser['password'] }}
       </p>
     </body>
 </html>

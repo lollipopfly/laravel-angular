@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Requests\RegisterRequest;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
 use Auth;
 use Mail;
+use App\Mail\SendRegisterEmail;
+use App\Mail\SendResetCode;
 use Hash;
 
 class AuthController extends Controller
@@ -32,6 +33,7 @@ class AuthController extends Controller
       // Retrieve all the users in the database and return them
       $users = User::all();
 
+      // return response()->json('hhhh', 200);
       return $users;
     }
 
@@ -52,28 +54,34 @@ class AuthController extends Controller
       return response()->json(compact('token'));
     }
 
-    public function register(RegisterRequest $request)
+    public function register(Request $request)
     {
+        $this->validate($request, [
+          'name' => 'required',
+          'email' => 'required|email|unique:users,email',
+          'password' => 'required|min:8',
+        ]);
+
         $confirmation_code = str_random(30);
 
         $newUser = USER::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
-            'confirmation_code' => $confirmation_code
+            'confirmation_code' => $confirmation_code,
         ]);
 
         if($newUser) {
           $emailUser = Array(
-            "name" => $request->get('name'),
-            "email" => $request->get('email'),
-            "password" => $request->get('password'),
-            "confirmation_code" => $confirmation_code
+              "name" => $request->get('name'),
+              "email" => $request->get('email'),
+              "password" => $request->get('password'),
+              "confirmation_code" => $confirmation_code
           );
-          $email = Mail::send('email.verify', $emailUser, function($message) use($emailUser){
-              $message->to($emailUser['email'], $emailUser['name'])
-                      ->subject('Verify your email address');
-          });
+
+          $email = new SendRegisterEmail($emailUser);
+
+          Mail::to($emailUser['email'])->send($email);
 
           return response()->json(true, 200);
         }
@@ -148,15 +156,12 @@ class AuthController extends Controller
            "reset_password_code" => $reset_password_code
          );
 
-        $email = Mail::send('email.reset_password', $emailUser, function($message) use($emailUser) {
-            $message->to($emailUser['email'], $emailUser['name'])
-                    ->subject('Verify your email address');
-        });
+        $email = new SendResetCode($emailUser);
 
-        if($email) {
-          User::where('email', $user->email)->update(['reset_password_code' => $reset_password_code]);
-          return response()->json(true, 200);
-        }
+        Mail::to($emailUser['email'])->send($email);
+        User::where('email', $user->email)->update(['reset_password_code' => $reset_password_code]);
+
+        return response()->json(true, 200);
       }
 
       return response()->json(['error' => 'Do not find User'], 500);

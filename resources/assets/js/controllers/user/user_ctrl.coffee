@@ -4,12 +4,15 @@ UserController = ($http, $state, $auth, $rootScope) ->
   vm.getUsers = ->
     # This request will hit the index method in the AuthenticateController
     # on the Laravel side and will return the list of users
-    $http.get('api/authenticate').success((users) ->
-      vm.users = users
-      return
-    ).error (error) ->
-      vm.error = error
-      return
+    $http.get('api/authenticate')
+      .then (response) ->
+        vm.users = response.data
+
+        return
+      , (error) ->
+        vm.error = error.data
+        console.log(error);
+
     return
 
   vm.logout = ->
@@ -22,7 +25,9 @@ UserController = ($http, $state, $auth, $rootScope) ->
       # Remove the current user info from rootscope
       $rootScope.currentUser = null
       $state.go 'sign_in'
+
       return
+
     return
 
   return
