@@ -3,6 +3,7 @@ ConfirmController = ($scope, $auth, $state, $http, $rootScope, $stateParams) ->
   $scope.data = {
     confirmation_code: $stateParams.confirmation_code
   }
+
   $http.post('api/authenticate/confirm', $scope.data).success((data, status, headers, config) ->
     # Save token
     $auth.setToken(data.token)
