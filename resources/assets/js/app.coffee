@@ -66,15 +66,18 @@ angular
       'reset_password'
     ]
 
-    # if not logged
-    $timeout(()->
-      $rootScope.currentState = $state.current.name
-
-      if !$auth.isAuthenticated() && publicRoutes.indexOf($rootScope.currentState) == -1
-        $location.path 'user/sign_in'
-    , 0)
-
     $rootScope.$on '$stateChangeStart', (event, toState) ->
+      # if not logged
+      if !$auth.isAuthenticated() &&
+      publicRoutes.indexOf(toState.name) == -1
+        $location.path 'user/sign_in'
+        return false;
+
+      if $auth.isAuthenticated() &&
+      (publicRoutes.indexOf(toState.name) == 0 ||
+      $rootScope.currentState == 'sign_in')
+        $location.path '/'
+
       user = JSON.parse(localStorage.getItem('user'))
 
       if user && $auth.isAuthenticated()
