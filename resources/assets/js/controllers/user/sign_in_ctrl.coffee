@@ -16,10 +16,13 @@ SignInController = ($auth, $state, $http, $rootScope) ->
         $rootScope.currentUser = response.data.user
 
         $state.go 'users'
+
         return
     ), (error) ->
       vm.loginErrorText = error.data.error
+
       return
+
   return
 
 'use strict'

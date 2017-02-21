@@ -1,4 +1,4 @@
-ForgotPasswordController = ($scope, $http) ->
+ForgotPasswordController = ($http) ->
   vm = this
 
   vm.restorePassword = ()->

@@ -1,4 +1,4 @@
-ResetPasswordController = ($auth, $state, $http, $stateParams) ->
+ResetPasswordController = ($http, $stateParams) ->
   vm = this
   vm.minlength = 8
 
@@ -10,10 +10,12 @@ ResetPasswordController = ($auth, $state, $http, $stateParams) ->
 
     if vm.password != vm.confirmPassword
       vm.passwordError = 'Password is invalid! Password doesn\'t match confirmation'
+
       return false
 
     if !form.password.$valid
       vm.passwordError = 'Password is invalid! Minimum length is 8 characters'
+
       return false
 
     $http.post('api/authenticate/reset_password', data)
